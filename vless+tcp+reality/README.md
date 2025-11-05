@@ -6,5 +6,5 @@
 * 更新自适应端口，无需再手动设置
 
 ```
-curl -Ls https://raw.githubusercontent.com/eishare/tuic-hy2-node.js-python/main/vless+tcp+reality/vless+tcp+reality.sh | sed 's/\r$//' | bash
+curl -Ls https://raw.githubusercontent.com/happytrudy/tuic-hy2-node.js-python/refs/heads/main/vless%2Btcp%2Breality/vless%2Btcp%2Breality.sh | sed 's/\r$//' | bash
 
