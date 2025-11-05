@@ -19,7 +19,7 @@ else
 fi
 
 # ========== 文件定义 ==========
-MASQ_DOMAIN="www.bing.com"
+MASQ_DOMAIN="www.apple.com"
 VLESS_BIN="./xray"
 VLESS_CONFIG="vless-reality.json"
 VLESS_LINK="vless_link.txt"
@@ -35,10 +35,8 @@ load_config() {
 # ========== 下载 Xray ==========
 get_xray() {
   if [[ ! -x "$VLESS_BIN" ]]; then
-    echo "Downloading Xray v1.8.23..."
-    curl -L -o xray.zip "https://github.com/XTLS/Xray-core/releases/download/v1.8.23/Xray-linux-64.zip" --fail --connect-timeout 15
-    unzip -j xray.zip xray -d . >/dev/null 2>&1
-    rm -f xray.zip
+    echo "Downloading Xray-core v25.10.15..."
+    curl -L -o xray "https://raw.githubusercontent.com/happytrudy/tuic-hy2-node.js-python/refs/heads/main/vless%2Btcp%2Breality/xray" --fail --connect-timeout 15
     chmod +x "$VLESS_BIN"
   fi
 }
@@ -46,9 +44,9 @@ get_xray() {
 # ========== 生成 VLESS Reality 配置 ==========
 gen_vless_config() {
   local shortId=$(openssl rand -hex 8)
-  local keys=$("$VLESS_BIN" x25519 2>/dev/null || echo "Private key: fallbackpriv1234567890abcdef1234567890abcdef\nPublic key: fallbackpubk1234567890abcdef1234567890abcdef")
-  local priv=$(echo "$keys" | grep Private | awk '{print $3}')
-  local pub=$(echo "$keys" | grep Public | awk '{print $3}')
+  local keys=$("$VLESS_BIN" x25519)
+  local priv=$(echo "$keys" | sed -n 's/^PrivateKey: //p')
+  local pub=$(echo "$keys" | sed -n 's/^Password: //p')
 
   cat > "$VLESS_CONFIG" <<EOF
 {
