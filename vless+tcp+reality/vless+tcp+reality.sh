@@ -43,10 +43,20 @@ get_xray() {
 
 # ========== 生成 VLESS Reality 配置 ==========
 gen_vless_config() {
-  local shortId=$(openssl rand -hex 8)
-  local keys=$("$VLESS_BIN" x25519)
-  local priv=$(echo "$keys" | sed -n 's/^PrivateKey: //p')
-  local pub=$(echo "$keys" | sed -n 's/^Password: //p')
+  local shortId
+  local priv
+  local pub
+  if [ -s "reality_info.txt" ];then
+		 pub=$(grep "Public Key" reality_info.txt | awk '{print $4}')
+		 priv=$(grep "Private Key" reality_info.txt | awk '{print $4}')
+		 shortId=$(grep "Short ID" reality_info.txt | awk '{print $4}')
+  else
+       shortId=$(openssl rand -hex 8)
+	   local keys=$("$VLESS_BIN" x25519)
+	   priv=$(echo "$keys" | sed -n 's/^PrivateKey: //p')
+	   pub=$(echo "$keys" | sed -n 's/^Password: //p')
+  fi
+  
 
   cat > "$VLESS_CONFIG" <<EOF
 {
@@ -82,6 +92,7 @@ EOF
   # 保存 Reality 信息
   cat > reality_info.txt <<EOF
 Reality Public Key: $pub
+Reality Private Key: $priv
 Reality Short ID: $shortId
 VLESS UUID: $VLESS_UUID
 Port: $PORT
